@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "hls_stream.h"
+#include "ap_axi_sdata.h"
 #include "common/xf_common.hpp"
-#include "common/xf_infra.hpp"
+#include "xf_resize_nn_bilinear.hpp"
 #include "imgproc/xf_resize.hpp"
 
 #define DATA_WIDTH 24
@@ -13,14 +14,12 @@
 /*  set the height and width  */
 #define WIDTH 3840
 #define HEIGHT 2160
-#define FILTER_SIZE 3
 #define TYPE XF_8UC3
 #define INTERPOLATION XF_INTERPOLATION_BILINEAR
 #define MAXDOWNSCALE 9
 
-typedef xf::cv::ap_axiu<DATA_WIDTH,1,1,1> interface_t;
+typedef ap_axiu<DATA_WIDTH,1,1,1> interface_t;
 typedef hls::stream<interface_t> stream_t;
-
 
 /*
 * We use the custom axis2xfMat and xfMat2axis and instead default
@@ -93,14 +92,13 @@ void resize_accel(stream_t& src, stream_t& dst,
                   int src_rows, int src_cols,
                   int dst_rows, int dst_cols) {
 
-
     #pragma HLS INTERFACE axis register both port=src
     #pragma HLS INTERFACE axis register both port=dst
 
-    #pragma HLS INTERFACE s_axilite port=src_rows              
-    #pragma HLS INTERFACE s_axilite port=src_cols              
-    #pragma HLS INTERFACE s_axilite port=dst_rows              
-    #pragma HLS INTERFACE s_axilite port=dst_cols              
+    #pragma HLS INTERFACE s_axilite port=src_rows
+    #pragma HLS INTERFACE s_axilite port=src_cols
+    #pragma HLS INTERFACE s_axilite port=dst_rows
+    #pragma HLS INTERFACE s_axilite port=dst_cols
     #pragma HLS INTERFACE s_axilite port=return
 
     xf::cv::Mat<TYPE, HEIGHT, WIDTH, NPIX> src_mat(src_rows, src_cols);
