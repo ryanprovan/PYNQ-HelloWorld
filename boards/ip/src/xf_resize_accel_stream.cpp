@@ -109,7 +109,7 @@ void resize_accel(stream_t& src, stream_t& dst,
     // Convert stream to xf::cv::Mat
     axis2xfMat<DATA_WIDTH, TYPE, HEIGHT, WIDTH, NPIX>(src, src_mat);
     // Run xfOpenCV kernel:
-    xf::cv::resize<INTERPOLATION, TYPE, HEIGHT, WIDTH, HEIGHT, WIDTH, NPIX, MAXDOWNSCALE>(src_mat, dst_mat);
+    xf::cv::resize<INTERPOLATION, TYPE, HEIGHT, WIDTH, HEIGHT, WIDTH, NPIX, false, MAXDOWNSCALE>(src_mat, dst_mat);
     // Convert xf::cv::Mat to stream
     xfMat2axis<DATA_WIDTH, TYPE, HEIGHT, WIDTH, NPIX>(dst_mat, dst);
 
